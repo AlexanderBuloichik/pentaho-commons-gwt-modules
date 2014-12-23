@@ -44,33 +44,36 @@ public class NewScheduleDialogEntryPoint implements EntryPoint, IResourceBundleL
     setupNativeHooks( this );
   }
 
-  public void openDialog(String reportFile) {
-    IScheduleCallback callback=new IScheduleCallback() {
-      
+  public void openScheduleDialog( String reportFile ) {
+    IScheduleCallback callback = new IScheduleCallback() {
+
       @Override
       public void okPressed() {
-        Window.alert( "IScheduleCallback.okPressed" );
       }
-      
+
       @Override
       public void cancelPressed() {
-        Window.alert( "IScheduleCallback.cancelPressed" );
       }
-      
+
       @Override
       public void scheduleJob() {
-        Window.alert( "IScheduleCallback.scheduleJob" );
       }
     };
-    NewScheduleDialog dialog =
-        new NewScheduleDialog( reportFile, callback, false );
+    NewScheduleDialog dialog = new NewScheduleDialog( reportFile, callback, false );
     dialog.show();
+  }
+
+  public void openBackgroundDialog( String reportFile ) {
+    new ScheduleOutputLocationDialogExecutor( reportFile ).performOperation();
   }
 
   public native void setupNativeHooks( NewScheduleDialogEntryPoint reportSchedulingEntryPoint )
   /*-{
-		$wnd.openReportSchedulingDialog = function(reportFile) {
-			reportSchedulingEntryPoint.@org.pentaho.mantle.client.dialogs.scheduling.NewScheduleDialogEntryPoint::openDialog(Ljava/lang/String;)(reportFile);
-		}
+    $wnd.openReportSchedulingDialog = function(reportFile) {
+      reportSchedulingEntryPoint.@org.pentaho.mantle.client.dialogs.scheduling.NewScheduleDialogEntryPoint::openScheduleDialog(Ljava/lang/String;)(reportFile);
+    }
+    $wnd.openReportBackgroundDialog = function(reportFile) {
+      reportSchedulingEntryPoint.@org.pentaho.mantle.client.dialogs.scheduling.NewScheduleDialogEntryPoint::openBackgroundDialog(Ljava/lang/String;)(reportFile);
+    }
   }-*/;
 }
